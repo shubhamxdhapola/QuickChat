@@ -25,7 +25,6 @@ export default {
     require("tailwindcss-animate"),
     require('tailwind-scrollbar'),
     daisyui
-
   ],
   daisyui: {
     themes: [
