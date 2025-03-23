@@ -1,0 +1,7 @@
+import jwt from 'jsonwebtoken'
+
+export const createToken = (userId, email) => {
+    return jwt.sign({userId, email}, process.env.JWT_KEY, {
+        expiresIn : 7 * 24 * 60 * 60 * 1000
+    })
+}

@@ -1,0 +1,67 @@
+import daisyui from "daisyui"
+/** @type {import('tailwindcss').Config} */
+export default {
+  darkMode: ["class"],
+  content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  theme: {
+      extend: {
+        screens: {
+          'custom': { min: '500px', max: '640px' },
+          'custom-home-1' : {min : '900px', max : '1100px'},
+          'custom-home-2' : {min : '768px', max : '900px'},
+          'custom-nav' : {min : '400px'},
+          'custom-theme-chat' : {min : '400px'},
+          'custom-theme-1' : {max : '350px'},
+          'custom-theme-2' : {min : '500px'},
+          'custom-theme-3' : {min : '700px'},
+          'custom-theme-4' : {min : '900px'},
+          'custom-chat-1' : {min : '550px'},
+          'custom-chat-2' : {min : '450px'},
+          'custom-chat-3' : {min : '768px', max : '900px'},
+        },
+      },
+    },
+  plugins: [
+    require("tailwindcss-animate"),
+    require('tailwind-scrollbar'),
+    daisyui
+
+  ],
+  daisyui: {
+    themes: [
+      "light",
+      "dark",
+      "cupcake",
+      "bumblebee",
+      "emerald",
+      "corporate",
+      "synthwave",
+      "retro",
+      "cyberpunk",
+      "valentine",
+      "halloween",
+      "garden",
+      "forest",
+      "aqua",
+      "lofi",
+      "pastel",
+      "fantasy",
+      "wireframe",
+      "black",
+      "luxury",
+      "dracula",
+      "cmyk",
+      "autumn",
+      "business",
+      "acid",
+      "lemonade",
+      "night",
+      "coffee",
+      "winter",
+      "dim",
+      "nord",
+      "sunset",
+    ],
+  },
+}
+
