@@ -3,11 +3,13 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-      "build" : "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
-      "start": "npm run start --prefix server"
+        "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+        "start": "npm run start --prefix server"
     },
     "author": "",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "dependencies": {
+        "cloudinary": "^1.41.3"
+    }
 }
-  
