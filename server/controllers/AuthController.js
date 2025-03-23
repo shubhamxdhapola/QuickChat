@@ -32,8 +32,9 @@ export const signup = async (req, res) => {
             await newUser.save()
             res.cookie('jwt', createToken(newUser._id, newUser.email), {
                 maxAge : 7 * 24 * 60 * 60 * 1000,
-                secure : true,
-                sameSite : "None"
+                httpOnly : true,
+                sameSite : "strict",
+                secure : process.env.NODE_ENV !== 'development'
             })
             return res.status(200).json({
                 user : {
@@ -64,8 +65,9 @@ export const login = async (req, res) => {
         
         res.cookie('jwt', createToken(user._id, user.email), {
             maxAge : 7 * 24 * 60 * 60 * 1000,
-            secure : true,
-            sameSite : "None"
+            httpOnly : true,
+            sameSite : "strict",
+            secure : process.env.NODE_ENV !== 'development'
         })
 
         return res.status(200).json({

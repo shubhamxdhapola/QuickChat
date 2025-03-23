@@ -7,16 +7,18 @@ import contactsRoute from './routes/ContactRoutes.js'
 import setupSocket from './socket.js'
 import messagesRoutes from './routes/MessagesRoutes.js'
 import { connectDB } from './utils/connectDB.js'
+import path from 'path'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT 
+const __dirname = path.resolve()
 
 app.use(
     cors({
         origin : process.env.ORIGIN,
-        methods : ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        // methods : ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         credentials : true
     })
 )
@@ -30,6 +32,13 @@ app.use('/uploads/files', express.static('uploads/files'))
 app.use('/api/auth', authRoutes)
 app.use('/api/contacts', contactsRoute)
 app.use('/api/messages', messagesRoutes)
+
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/dist')))
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'))
+    })
+}
 
 const server = app.listen(PORT, () => {
     console.log("Server is listening at PORT", PORT)  
