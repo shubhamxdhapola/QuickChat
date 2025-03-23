@@ -3,6 +3,8 @@ import { GET_DM_CONTACTS_ROUTES } from "@/utils/constants"
 
 export const createChatSlice = (set, get) => ({
 
+    isImageUploading : false,
+    setIsProcessingImage: (isProcessingImage) => set({isProcessingImage}),
     isChatSelected : false,
     selectedChatData : undefined,
     selectedChatMessages : [],

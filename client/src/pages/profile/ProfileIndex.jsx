@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { colors, getColor } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Camera, Trash2 } from "lucide-react";
+import { ChevronLeft, Camera, Trash2, LoaderCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { apiClient } from "@/lib/api-client";
 import { HOST } from "@/utils/constants.js";
@@ -16,7 +16,7 @@ import {
 const Profile = () => {
 
   const navigate = useNavigate();
-  const { userInfo, setUserInfo } = useAppStore();
+  const { userInfo, setUserInfo, setIsProcessingImage, isProcessingImage } = useAppStore();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
@@ -31,7 +31,7 @@ const Profile = () => {
     }
 
     if (userInfo.image) {
-      setImage(`${HOST}/${userInfo.image}`);
+      setImage(`${userInfo.image}`);
     }
   }, [userInfo]);
 
@@ -81,22 +81,26 @@ const Profile = () => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
+      setIsProcessingImage(true)
       const formData = new FormData();
       formData.append("profile-image", file);
       const response = await apiClient.post(ADD_PROFILE_IMAGE_ROUTE, formData);
       if (response.status === 200 && response.data.image) {
         setUserInfo({ ...userInfo, image: response.data.image });
         toast.success("Image updated successfully.");
+        setIsProcessingImage(false)
       }
     }
   };
 
   const handleDeleteImage = async () => {
     try {
+      setIsProcessingImage(true)
       const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE);
       if (response.status === 200) {
         setUserInfo({ ...userInfo, image: null });
         toast.success("Image removed successfully");
+        setIsProcessingImage(false)
         setImage(null);
       }
     } catch (err) {
@@ -147,11 +151,16 @@ const Profile = () => {
               data-tip={image ? "Remove Image" : "Add Image"}
             >
               <button>
-                {image ? (
+              {(isProcessingImage) ? (
+                <LoaderCircle className="h-4 w-4 sm:h-[18px] sm:w-[18px] animate-spin" />
+                ) : (
+                image ? (
                   <Trash2 className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
                 ) : (
-                  <Camera className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
-                )}
+                  <Camera className="h-4 w-4 sm:h-[18px] sm:w-[18px]"/>
+                )
+              )}
+
               </button>
             </div>
 

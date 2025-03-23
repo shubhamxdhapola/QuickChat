@@ -9,7 +9,6 @@ const ChatHeader = () => {
   const { 
     closeChat, 
     selectedChatData, 
-    selectedChatType, 
     activeUsers 
   } = useAppStore()
 
@@ -22,7 +21,7 @@ const ChatHeader = () => {
               {selectedChatData.image ? (
                 <>
                   <AvatarImage
-                    src={`${HOST}/${selectedChatData.image}`}
+                    src={selectedChatData.image}
                     alt="profile"
                     className="object-cover w-full h-full bg-black rounded-full relative"
                   />

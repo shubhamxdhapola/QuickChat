@@ -104,7 +104,7 @@ const MessageContainer = () => {
               }}
             >
               <img
-                src={`${HOST}/${message.fileUrl}`}
+                src={message.fileUrl}
                 className="h-[auto] w-[200px] custom-chat-1:w-[270px] custom-chat-3:w-[200px]"
                 alt="img"
               />
@@ -167,7 +167,7 @@ const MessageContainer = () => {
             >
               <div>
                 <img
-                  src={`${HOST}/${imageURL}`}
+                  src={imageURL}
                   alt="img"
                   className="h-[80vh] w-full object-contain sm:rounded"
                 />

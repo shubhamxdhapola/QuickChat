@@ -33,10 +33,10 @@ app.use('/api/contacts', contactsRoute)
 app.use('/api/messages', messagesRoutes)
 
 // if(process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')))
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'))
-    })
+    // app.use(express.static(path.join(__dirname, '../client/dist')))
+    // app.get('*', (req, res) => {
+    //     res.sendFile(path.join(__dirname, '../client', 'dist', 'index.html'))
+    // })
 // }
 
 const server = app.listen(PORT, () => {

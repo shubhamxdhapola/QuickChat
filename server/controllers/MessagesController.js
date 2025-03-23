@@ -28,14 +28,8 @@ export const uploadFile = async (req, res, next) => {
         if(!req.file) {
             return res.status(400).send("File is required")
         }
-
-        const date = Date.now()
-        let fileDir = `uploads/files/${date}`
-        let fileName = `${fileDir}/${req.file.originalname}`
-        mkdirSync(fileDir, {recursive : true})
-        renameSync(req.file.path, fileName)
         
-        return res.status(200).json({filePath : fileName})
+        return res.status(200).json({filePath : req.file.path})
     } catch(err) {
         console.log("Error in uploadFile controller", err)
         return res.status(500).send("Internal server error!")

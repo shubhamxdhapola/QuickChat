@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt"
 import User from "../models/UserModel.js"
-import { renameSync, unlinkSync } from 'fs'
 import { createToken } from "../utils/createToken.js"
 
 export const signup = async (req, res) => {
@@ -142,18 +141,14 @@ export const updateProfile = async (req, res) => {
     }
 }
 
-export const addProfileImage = async (req, res, next) => {
+export const addProfileImage = async (req, res) => {
     try {
         if(!req.file) {
             return res.status(400).send("File is required")
         }
 
-        const date = Date.now()
-        let fileName = 'uploads/profiles/' + date + req.file.originalname
-        renameSync(req.file.path, fileName)
-
         const updatedUser = await User.findByIdAndUpdate(
-            req.userId, {image : fileName},
+            req.userId, {image : req.file.path},
             { new : true, runValidators : true }
         )
         
@@ -166,17 +161,13 @@ export const addProfileImage = async (req, res, next) => {
     }
 }
 
-export const removeProfileImage = async (req, res, next) => {
+export const removeProfileImage = async (req, res) => {
     try {
         const {userId} = req
         const user = await User.findById(userId)
 
         if(!user) {
             return res.status(404).send("User not found")
-        }
-
-        if(user.image) {
-            unlinkSync(user.image)
         }
 
         user.image = null
