@@ -1,7 +1,7 @@
+import multer from 'multer'
 import { Router } from 'express'
 import { verifyToken } from '../middlewares/AuthMiddleware.js'
-import multer from 'multer'
-import { storage } from '../utils/cloudinaryConfig.js'
+import { profilePhotosStorage } from '../utils/cloudinaryConfig.js'
 import { 
     signup, 
     addProfileImage, 
@@ -13,7 +13,7 @@ import {
 } from '../controllers/AuthController.js'
 
 const authRoutes = Router()
-const upload = multer({ storage });
+const upload = multer({ storage : profilePhotosStorage });
 
 authRoutes.post('/signup', signup)
 authRoutes.post('/login', login)

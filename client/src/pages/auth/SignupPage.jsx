@@ -7,8 +7,13 @@ import { SIGNUP_ROUTE } from "@/utils/constants"
 import { toast } from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import AuthImagePattern from './AuthImagePattern'
+import { useEffect } from "react"
 
 export default function SignUpPage() {
+
+  useEffect(() => {
+      document.title = 'QuickChat - Signup'
+  },[])
 
   const [ showPassword, setShowPassword ] = useState(false)
   const { isSigningUp, setIsSigningUp, setUserInfo } = useAppStore()

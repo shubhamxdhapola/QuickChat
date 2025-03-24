@@ -1,7 +1,6 @@
-import {v2 as cloudinary} from 'cloudinary'
-import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from 'cloudinary'
+import { CloudinaryStorage } from "multer-storage-cloudinary"
 import dotenv from 'dotenv'
-
 dotenv.config()
 
 cloudinary.config({
@@ -10,11 +9,20 @@ cloudinary.config({
     api_secret : process.env.CLOUDINARY_API_SECRET,
 })
 
-const storage = new CloudinaryStorage({
+const profilePhotosStorage = new CloudinaryStorage({
     cloudinary,
     params: {
-      folder: "chat-app",
+      folder: "QuickChat_Profile_Photos",
+      public_id: (req, file) => file.originalname.replace(/\s+/g, '_')
+    }
+})
+
+const chatFilesStorage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: "QuickChat_Chat_Files",
       resource_type: "auto",
+      public_id: (req, file) => file.originalname.replace(/\s+/g, '_')
     }
 })
 
@@ -25,6 +33,6 @@ const deleteImageFromCloudinary = async (publicId) => {
     } catch (err) {
         console.error("Error deleting image:", err)
     }
-};
+}
 
-export  {cloudinary, storage, deleteImageFromCloudinary}
+export {cloudinary, profilePhotosStorage, chatFilesStorage, deleteImageFromCloudinary}

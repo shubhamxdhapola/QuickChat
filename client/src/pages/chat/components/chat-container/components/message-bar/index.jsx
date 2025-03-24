@@ -1,6 +1,6 @@
 import { UPLOAD_FILE_ROUTE } from "@/utils/constants";
 import { useEffect, useRef, useState } from "react";
-import { SmilePlus, Paperclip, SendHorizontal, Loader2 } from "lucide-react";
+import { SmilePlus, Paperclip, SendHorizontal, LoaderCircle } from "lucide-react";
 import { useSocket } from "@/context/socketContext";
 import { useAppStore } from "@/store";
 import { apiClient } from "@/lib/api-client";
@@ -14,9 +14,9 @@ const MessageBar = () => {
   const {
     selectedChatData,
     userInfo,
-    setIsUploading,
+    isSendingFile,
+    setIsSendingFile,
     updateDmContactsList,
-    sendingMessage,
   } = useAppStore();
 
   const [message, setMessage] = useState("");
@@ -62,12 +62,11 @@ const MessageBar = () => {
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
-        setIsUploading(true);
+        setIsSendingFile(true)
         const response = await apiClient.post(UPLOAD_FILE_ROUTE, formData);
 
         if (response.status === 200 && response.data) {
-          setIsUploading(false);
-
+          setIsSendingFile(false)
           socket.emit("sendMessage", {
             sender: userInfo.id,
             content: undefined,
@@ -78,7 +77,7 @@ const MessageBar = () => {
         }
       }
     } catch (err) {
-      setIsUploading(false);
+      setIsSendingFile(false);
       console.log("error in handleAttachmentChange");
     }
   };
@@ -135,8 +134,8 @@ const MessageBar = () => {
           onClick={handleSendMessage}
           disabled={!message.trim()}
         >
-          {sendingMessage ? (
-            <Loader2 className="size-5 animate-spin" />
+          {isSendingFile ? (
+            <LoaderCircle className="animate-spin" />
           ) : (
             <SendHorizontal />
           )}

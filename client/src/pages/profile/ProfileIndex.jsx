@@ -24,6 +24,7 @@ const Profile = () => {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
+    document.title = 'QuickChat - Profile'
     if (userInfo.profileSetUp) {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);

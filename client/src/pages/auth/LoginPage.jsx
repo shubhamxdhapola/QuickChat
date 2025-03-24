@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { apiClient } from '@/lib/api-client.js'
 import { LOGIN_ROUTE } from '@/utils/constants.js'
@@ -8,6 +8,10 @@ import { MessageSquare, Mail, Lock, EyeOff, Eye, Loader2 } from "lucide-react";
 import AuthImagePattern from './AuthImagePattern'
 
 const LoginPage = () => {
+
+  useEffect(() => {
+    document.title = 'QuickChat - Login'
+  },[])
       
   const [showPassword, setShowPassword] = useState(false);
 

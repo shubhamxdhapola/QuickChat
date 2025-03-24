@@ -26,7 +26,7 @@ export const searchContacts = async (req, res) => {
 
     } catch(err) {
         console.log("Error in searchContacts controller", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : 'Internal server error!'})
     }
 }
 
@@ -90,6 +90,6 @@ export const getContactsForDMList = async (req, res) => {
         return res.status(200).json({contacts})
     } catch(err) {
         console.log("Error in getContactsForDMList controller", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : 'Internal server error!'})
     }
 }

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 import User from "../models/UserModel.js"
 import { createToken } from "../utils/createToken.js"
+import { deleteImageFromCloudinary } from "../utils/cloudinaryConfig.js"
 
 export const signup = async (req, res) => {
     try {
@@ -104,7 +105,7 @@ export const getUserInfo = async (req, res) => {
         })
     } catch(err) {
         console.log("Error in getUserInfo controller.", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : 'Internal server error!'})
     }
 }
 
@@ -137,7 +138,7 @@ export const updateProfile = async (req, res) => {
         })
     } catch(err) {
         console.log("Error in updateProfile controller.", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : 'Internal server error!'})
     }
 }
 
@@ -148,16 +149,19 @@ export const addProfileImage = async (req, res) => {
         }
 
         const updatedUser = await User.findByIdAndUpdate(
-            req.userId, {image : req.file.path},
-            { new : true, runValidators : true }
+            req.userId, {
+                image : req.file.path, 
+                imagePublicId : req.file.filename
+            },{ new : true, runValidators : true }
         )
         
         return res.status(200).json({
            image : updatedUser.image
         })
+        
     } catch(err) {
         console.log("Error in addProfileImage controller.", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : "Internal server error!"})
     }
 }
 
@@ -166,9 +170,10 @@ export const removeProfileImage = async (req, res) => {
         const {userId} = req
         const user = await User.findById(userId)
 
-        if(!user) {
-            return res.status(404).send("User not found")
-        }
+        if(!user) return res.status(404).json({message : "User not found"})
+        
+        const publicId = user.imagePublicId
+        await deleteImageFromCloudinary(publicId)
 
         user.image = null
         await user.save()
@@ -177,7 +182,7 @@ export const removeProfileImage = async (req, res) => {
         
     } catch(err) {
         console.log("Error in removeProfileImage controller.", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : "Internal server error!"})
     }
 }
 
@@ -187,7 +192,7 @@ export const logout = async (req, res) => {
         return res.status(200).json({message : "Logout successfully."})
     } catch(err) {
         console.log("Error in Logout controller", err)
-        return res.status(500).send("Internal server error!")
+        return res.status(500).json({message : "Internal server error!"})
     }
 }
 

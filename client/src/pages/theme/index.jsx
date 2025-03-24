@@ -3,6 +3,7 @@ import { useAppStore } from "@/store";
 import { SendHorizontal, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { useEffect } from "react";
 
 const PREVIEW_MESSAGES = [
   { id: 1, content: "Hey! How's it going?", isSent: false },
@@ -14,6 +15,11 @@ const PREVIEW_MESSAGES = [
 ];
 
 const ThemePage = () => {
+
+  useEffect(() => {
+    document.title = 'QuickChat - Themes'      
+  }, [])
+
   const { theme, setTheme } = useAppStore();
   const navigate = useNavigate();
 
