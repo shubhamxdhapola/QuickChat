@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { useAppStore } from "@/store"
 import { apiClient } from "@/lib/api-client"
-import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants"
-import { File, ArrowDownToLine, ImageDown, X } from "lucide-react"
+import { GET_ALL_MESSAGES_ROUTE } from "@/utils/constants"
+import { File, ArrowDownToLine, ImageDown, X, LoaderCircle } from "lucide-react"
 import MessageSkeleton from "@/components/skeletons/MessageSkeleton"
 import moment from "moment"
 
@@ -10,13 +10,14 @@ const MessageContainer = () => {
   
   const [showImage, setShowImage] = useState(false)
   const [imageURL, setImageURL] = useState(null)
+  const [downloadingFiles, setDownloadingFiles] = useState({})
+
   const scrollRef = useRef()
   const {
     isChatSelected,
     selectedChatData,
     selectedChatMessages,
     setSelectedChatMessages,
-    setIsDownloading,
     setIsMessagesLoading,
     isMessagesLoading,
   } = useAppStore()
@@ -56,6 +57,7 @@ const MessageContainer = () => {
 
   const downloadFile = async (fileUrl) => {
     try {
+      setDownloadingFiles((prev) => ({ ...prev, [fileUrl]: true }))
       const response = await fetch(fileUrl)
       const blob = await response.blob()
       const blobUrl = URL.createObjectURL(blob)
@@ -66,8 +68,10 @@ const MessageContainer = () => {
       link.click()
       document.body.removeChild(link)
       URL.revokeObjectURL(blobUrl)
+      setDownloadingFiles((prev) => ({ ...prev, [fileUrl]: false }))
     } catch (error) {
       console.error("Download failed:", error)
+      setDownloadingFiles((prev) => ({ ...prev, [fileUrl]: false }))
     }
   }
 
@@ -121,8 +125,11 @@ const MessageContainer = () => {
               <span
                 className="p-3 rounded-lg custom-chat-1:hover:bg-base-100/20 cursor-pointer transition-all duration-300"
                 onClick={() => downloadFile(message.fileUrl)}
-              >
-                <ArrowDownToLine size={20} />
+              >{downloadingFiles[message.fileUrl] 
+                  ? <LoaderCircle size={20} className="animate-spin" /> 
+                  : <ArrowDownToLine size={20} />
+                }
+                
               </span>
             </div>
           )}
@@ -178,7 +185,11 @@ const MessageContainer = () => {
                   className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
                   onClick={() => downloadFile(imageURL)}
                 >
-                  <ImageDown />
+                {downloadingFiles[imageURL] 
+                  ? <LoaderCircle className="animate-spin" /> 
+                  : <ImageDown />
+                }
+                  
                 </button>
                 <button
                   className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
