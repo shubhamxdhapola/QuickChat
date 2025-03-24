@@ -9,7 +9,7 @@ export const createChatSlice = (set, get) => ({
     selectedChatData : undefined,
     selectedChatMessages : [],
     directMessagesContacts : [],
-    isSendingFile : false,
+    isSendingFile: {},
     isMessagesLoading : true,
     isContactsLoading : true,
     isNewMessage : false,
@@ -18,7 +18,11 @@ export const createChatSlice = (set, get) => ({
     setIsNewMessage : (isNewMessage) => set({isNewMessage}),
     setIsMessagesLoading : (isMessagesLoading) => set({isMessagesLoading}),
     setIsContactsLoading : (isContactsLoading) => set({isContactsLoading}),
-    setIsSendingFile : (isSendingFile) => set({isSendingFile}),
+    setIsSendingFile: (chatId, status) =>
+        set((state) => ({
+            isSendingFile: { ...state.isSendingFile, [chatId]: status }
+        }
+    )),
     setIsDownloading : (isDownloading) => set({isDownloading}),
     setDirectMessagesContacts : (directMessagesContacts) => set({directMessagesContacts}),
     setIsChatSelected : (isChatSelected) => set({isChatSelected}),

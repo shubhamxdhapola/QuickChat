@@ -14,7 +14,6 @@ const MessageBar = () => {
   const {
     selectedChatData,
     userInfo,
-    isSendingFile,
     setIsSendingFile,
     updateDmContactsList,
   } = useAppStore();
@@ -58,15 +57,16 @@ const MessageBar = () => {
 
   const handleAttachmentChange = async (e) => {
     try {
+      setIsSendingFile(selectedChatData?._id, true);
       const file = e.target.files[0];
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
-        setIsSendingFile(true)
+        setIsSendingFile(selectedChatData?._id, true);
         const response = await apiClient.post(UPLOAD_FILE_ROUTE, formData);
 
         if (response.status === 200 && response.data) {
-          setIsSendingFile(false)
+          setIsSendingFile(selectedChatData?._id, false);
           socket.emit("sendMessage", {
             sender: userInfo.id,
             content: undefined,
@@ -77,7 +77,7 @@ const MessageBar = () => {
         }
       }
     } catch (err) {
-      setIsSendingFile(false);
+      setIsSendingFile(selectedChatData?._id, false);
       console.log("error in handleAttachmentChange");
     }
   };
@@ -124,6 +124,7 @@ const MessageBar = () => {
           </div>
         </div>
       </div>
+      
       <div className="tooltip flex" data-tip="Send">
         <button
           className={`rounded-md flex items-center justify-center p-4 custom-chat-1:p-5 ${
@@ -134,11 +135,7 @@ const MessageBar = () => {
           onClick={handleSendMessage}
           disabled={!message.trim()}
         >
-          {isSendingFile ? (
-            <LoaderCircle className="animate-spin" />
-          ) : (
-            <SendHorizontal />
-          )}
+          <SendHorizontal />
         </button>
       </div>
     </div>
