@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { useAppStore } from "@/store";
-import { apiClient } from "@/lib/api-client";
-import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants";
-import { File, ArrowDownToLine, ImageDown, X } from "lucide-react";
-import MessageSkeleton from "@/components/skeletons/MessageSkeleton";
-import moment from "moment";
+import { useEffect, useRef, useState } from "react"
+import { useAppStore } from "@/store"
+import { apiClient } from "@/lib/api-client"
+import { GET_ALL_MESSAGES_ROUTE, HOST } from "@/utils/constants"
+import { File, ArrowDownToLine, ImageDown, X } from "lucide-react"
+import MessageSkeleton from "@/components/skeletons/MessageSkeleton"
+import moment from "moment"
 
 const MessageContainer = () => {
   
-  const [showImage, setShowImage] = useState(false);
-  const [imageURL, setImageURL] = useState(null);
-  const scrollRef = useRef();
+  const [showImage, setShowImage] = useState(false)
+  const [imageURL, setImageURL] = useState(null)
+  const scrollRef = useRef()
   const {
     isChatSelected,
     selectedChatData,
@@ -19,56 +19,57 @@ const MessageContainer = () => {
     setIsDownloading,
     setIsMessagesLoading,
     isMessagesLoading,
-  } = useAppStore();
+  } = useAppStore()
 
   useEffect(() => {
     const getMessages = async () => {
-      setIsMessagesLoading(true);
+      setIsMessagesLoading(true)
       try {
         const response = await apiClient.post(GET_ALL_MESSAGES_ROUTE, {
           id: selectedChatData._id,
-        });
+        })
         if (response.data.messages) {
-          setSelectedChatMessages(response.data.messages);
-          setIsMessagesLoading(false);
+          setSelectedChatMessages(response.data.messages)
+          setIsMessagesLoading(false)
         }
       } catch (err) {
-        setIsMessagesLoading(false);
-        console.log("Error in getMessages", err);
+        setIsMessagesLoading(false)
+        console.log("Error in getMessages", err)
       }
-    };
-    if (selectedChatData._id) {
-      if (isChatSelected) getMessages();
     }
-  }, [selectedChatData, isChatSelected, setSelectedChatMessages]);
+    if (selectedChatData._id) {
+      if (isChatSelected) getMessages()
+    }
+  }, [selectedChatData, isChatSelected, setSelectedChatMessages])
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+      scrollRef.current.scrollIntoView({ behavior: "smooth" })
     }
-  }, [selectedChatMessages]);
+  }, [selectedChatMessages])
 
   const checkIfImage = (filePath) => {
     const imageRegex =
-      /\.(jpg|jepg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i;
-    return imageRegex.test(filePath);
-  };
+      /\.(jpg|jepg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i
+    return imageRegex.test(filePath)
+  }
 
-  const downloadFile = async (url) => {
-    setIsDownloading(true);
-    const response = await apiClient.get(`${HOST}/${url}`, {
-      responseType: "blob",
-    });
-    const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = urlBlob;
-    link.setAttribute("download", url.split("/").pop());
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(urlBlob);
-    setIsDownloading(false);
-  };
+  const downloadFile = async (fileUrl) => {
+    try {
+      const response = await fetch(fileUrl)
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = blobUrl
+      link.download = fileUrl.split("/").pop() 
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(blobUrl)
+    } catch (error) {
+      console.error("Download failed:", error)
+    }
+  }
 
   const renderDmMessages = (message) => (
     <div
@@ -99,8 +100,8 @@ const MessageContainer = () => {
             <div
               className="cursor-pointer"
               onClick={() => {
-                setShowImage(true);
-                setImageURL(message.fileUrl);
+                setShowImage(true)
+                setImageURL(message.fileUrl)
               }}
             >
               <img
@@ -131,14 +132,14 @@ const MessageContainer = () => {
         {moment(message.timestamp).format("LT")}
       </div>
     </div>
-  );
+  )
 
   const renderMessages = () => {
-    let lastDate = null;
+    let lastDate = null
     return selectedChatMessages.map((message, index) => {
-      const messageDate = moment(message.timestamp).format("YYYY-MM-DD");
-      const showDate = messageDate !== lastDate;
-      lastDate = messageDate;
+      const messageDate = moment(message.timestamp).format("YYYY-MM-DD")
+      const showDate = messageDate !== lastDate
+      lastDate = messageDate
       return (
         <div key={index}>
           {showDate && (
@@ -148,9 +149,9 @@ const MessageContainer = () => {
           )}
           {isChatSelected && renderDmMessages(message)}
         </div>
-      );
-    });
-  };
+      )
+    })
+  }
 
   return (
     <>
@@ -182,8 +183,8 @@ const MessageContainer = () => {
                 <button
                   className="bg-black/20 p-3 text-2xl rounded-full hover:bg-black/50 cursor-pointer transition-all duration-300"
                   onClick={() => {
-                    setShowImage(false);
-                    setImageURL(null);
+                    setShowImage(false)
+                    setImageURL(null)
                   }}
                 >
                   <X />
@@ -194,7 +195,7 @@ const MessageContainer = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default MessageContainer;
+export default MessageContainer

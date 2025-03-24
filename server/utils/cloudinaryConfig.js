@@ -19,10 +19,16 @@ const profilePhotosStorage = new CloudinaryStorage({
 
 const chatFilesStorage = new CloudinaryStorage({
     cloudinary,
-    params: {
-      folder: "QuickChat_Chat_Files",
-      resource_type: "auto",
-      public_id: (req, file) => file.originalname.replace(/\s+/g, '_')
+    params: async (req, file) => {
+        const fileExtension = file.originalname.split('.').pop()
+        console.log(fileExtension)
+        const fileName = file.originalname.replace(/\s+/g, '_')
+
+        return {
+          folder: "QuickChat_Chat_Files",
+          resource_type: fileExtension === 'pdf' || 'mp3' ? "raw" : "auto",
+          public_id: fileName
+        }
     }
 })
 
