@@ -77,7 +77,7 @@ const NewDm = () => {
 
       <Dialog open={openNewContactModal} onOpenChange={setOpenNewContactModal}>
         <DialogContent className="bg-base-200 border-none text-base-content w-[400px] h-[400px] flex flex-col px-0 overflow-y-auto rounded-sm pt-0 gap-0">
-          <div className="sticky top-0 z-10 bg-inherit space-y-4 py-5">
+          <div className="sticky top-0 z-10 bg-base-200 space-y-4 py-5">
             <DialogHeader>
               <DialogTitle className="px-6">
                 Please select a contact
