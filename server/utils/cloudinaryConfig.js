@@ -21,7 +21,6 @@ const chatFilesStorage = new CloudinaryStorage({
     cloudinary,
     params: async (req, file) => {
         const fileExtension = file.originalname.split('.').pop()
-        console.log(fileExtension)
         const fileName = file.originalname.replace(/\s+/g, '_')
 
         return {
